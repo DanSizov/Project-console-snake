@@ -6,7 +6,8 @@
 #define width 25
 #define height 15
 
-
+int numberoftails = 0;
+int i = 0;
 char map[height][width+1];
 int bufx, bufy;
 int buftailx, buftaily;
@@ -32,15 +33,18 @@ TypeSnake snake;
 typedef struct
 {
 	int tail_x, tail_y, tail_w;
-	
-
+	int buftailx1, buftaily1;
 } TypeTail;
 
+//struct TypeTail* tl;
 
 TypeFood food;
+
 TypeTail tail;
 
 void initmap() {
+	
+	//tl = (struct TypeTail*)malloc(i * sizeof(TypeTail));
 
 	for (int i = 0; i < width; i++)
 	{
@@ -78,8 +82,8 @@ int noblock() {
 void moveSnakeAndTail() {
 	
 	key = noblock();
-	bufx = snake.head_x;
-	bufy = snake.head_y;
+	tail.buftailx1 = snake.head_x;
+	tail.buftaily1 = snake.head_y;
 
 	if ((key == 'w' || key == 's' || key == 'a' || key == 'd') && (abs(direction - key) > 5))
 		direction = key;
@@ -105,11 +109,12 @@ void moveSnakeAndTail() {
 	if (snake.head_y <= 0)
 		snake.head_y = 13;
 
-	tail.tail_x = bufx;
-	tail.tail_y = bufy;
+	tail.tail_x = tail.buftailx1;
+	tail.tail_y = tail.buftaily1;
 
-	buftailx = tail.tail_x;
-	buftaily = tail.tail_y;
+	//buftailx = tail.tail_x;
+	//buftaily = tail.tail_y;
+
 
 }
 
@@ -118,8 +123,8 @@ void initSnakeAndTail() {
 		snake.head_x = width / 2;
 		snake.head_y = height / 2;
 		snake.head_w = 1;
-		tail.tail_x = snake.head_x;
-		tail.tail_y = snake.head_y;
+		tail.tail_x = tail.buftailx1;
+		tail.tail_y = tail.buftaily1;
 		tail.tail_w = 1;
 	
 }
@@ -131,26 +136,8 @@ void putSnake() {
 }
 
 void growTail() {
+	
 
-	if (foodCounter == 1) {
-		map[tail.tail_y][tail.tail_x] = 's';
-
-		tail.tail_x = snake.head_x;
-		tail.tail_y = snake.head_y;
-		tail.tail_w = 1;
-	};
-	if (foodCounter >= 2) {
-		TypeTail tailg;
-
-		map[buftaily][buftailx] = 's';
-		tailg.tail_x = buftailx;
-		tailg.tail_y = buftaily;
-		tailg.tail_w = 1;
-		
-
-		
-
-	}
 }
 
 void initFood() {
@@ -162,16 +149,35 @@ void initFood() {
 void putFood() {
 
 	map[food.pos_y][food.pos_x] = '*';
+	
 
 
+	foodCounterBuf = foodCounter;
 		if ((snake.head_x == food.pos_x) && (snake.head_y == food.pos_y))
 		{
 
 			food.pos_x = 1 + rand() % 23;
 			food.pos_y = 1 + rand() % 13;
 			foodCounter++;
-		};	
-		growTail();
+			
+		}
+
+		if (foodCounter >=1 ) {
+			map[tail.tail_y][tail.tail_x] = 's';
+
+			tail.tail_x = tail.buftailx1;
+			tail.tail_y = tail.buftaily1;
+			tail.tail_w = 1;
+		};
+		//if (foodCounter >= 2) {
+		//	map[tail.tail_y][tail.tail_x] = 's';
+
+		//	tail.tail_x = tail.buftailx1;
+		//	tail.tail_y = tail.buftaily1;
+		//	tail.tail_w = 1;
+		//};
+
+	
 }
 
 
