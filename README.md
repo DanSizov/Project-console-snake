@@ -1,6 +1,6 @@
 A console game built on C using 2 structures each consists of 1 symbol: TypeSnake as a head of a snake and TypeTail as a tail.
 
-Each and every time head eats food it gains 1 tail symbol.
+Each and every time head eats food it gains 1 tail structure in the end as a symbol.
 
 Movement explanataion.
 
