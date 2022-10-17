@@ -147,13 +147,3 @@ void putFoodAndTail() {
 	if (map[snake.head_y][snake.head_x] == map[tail[i].tail_y][tail[i].tail_x])
 		gameOver();
 }
-
-void setcur(int x, int y)
-{
-	COORD coord;
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-
-	printf("Your score is %d", foodCounter);
-}
