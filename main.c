@@ -7,7 +7,6 @@ void main()
 		initFood();
 		
 		 while (game == 0) {
-			setcur(0, 15);
 			system("cls");
 			initmap();
 			moveSnakeAndTail();
