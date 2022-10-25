@@ -27,7 +27,7 @@ void gameOver()
 	system("cls");
 	game = 1;
 
-	printf("GAME OVER\n\n\n\n");
+	printf("       GAME OVER\n\n\n\n");
 }
 
 void initmap() {
