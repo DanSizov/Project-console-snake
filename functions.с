@@ -1,0 +1,226 @@
+#include <stdio.h>
+#include <Windows.h>
+#include <conio.h>
+#include <malloc.h>
+#include "types.h"
+
+#define width 25
+#define height 16
+
+TypeFood food;
+snake_t snake;
+
+tail_t tail;
+
+struct element* begin;
+
+list_t list;
+
+char map[height][width + 1];
+
+char key;
+
+int direction;
+
+int game = 0;
+
+list_t add_begin(list_t, int, int);
+list_t del_end(list_t);
+
+void gameOver()
+{
+	system("cls");
+	game = 1;
+
+	printf("       GAME OVER\n\n\n\n");
+}
+
+void initmap() {
+
+	for (int i = 0; i < width; i++)
+	{
+		map[0][i] = '#';
+		map[0][width] = '\0';
+	}
+	strncpy(map[1], map[0], width + 1);
+
+	for (int i = 1; i < width - 1; i++)
+	{
+		map[1][i] = ' ';
+	}
+	for (int i = 1; i < height - 1; i++)
+	{
+		strncpy(map[i], map[1], width + 1);
+	}
+	for (int i = 0; i < width; i++)
+		map[height - 2][i] = '#';
+}
+
+void setcur(int x, int y) {
+
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+void showMap() {
+
+	for (int i = 0; i < height - 1; i++) {
+
+		printf("%s\n", map[i]);
+	}
+}
+
+int noblock() {
+	if (_kbhit())
+		return _getch();
+	else return -1;
+}
+
+void initSnakeAndTail(snake_t* snake) {
+
+	snake->pos_x = width / 2;
+	snake->pos_y = height / 2;
+	list = add_begin(list, snake->pos_x, snake->pos_y);
+}
+
+void moveSnakeAndTail() {
+
+	key = noblock();
+
+	snake.buftailx = snake.pos_x;
+	snake.buftaily = snake.pos_y;
+
+	if ((key == 'w' || key == 's' || key == 'a' || key == 'd') && (abs(direction - key) > 5))
+		direction = key;
+
+	if (direction == 'w')
+		snake.pos_y--;
+
+	if (direction == 's')
+		snake.pos_y++;
+
+	if (direction == 'a')
+		snake.pos_x--;
+
+	if (direction == 'd')
+		snake.pos_x++;
+
+	if (snake.pos_x >= 24)
+		snake.pos_x = 1;
+
+	if (snake.pos_x <= 0)
+		snake.pos_x = 23;
+
+	if (snake.pos_y >= 14)
+		snake.pos_y = 1;
+
+	if (snake.pos_y <= 0)
+		snake.pos_y = 13;
+
+	list.begin->tail.tail_x = snake.buftailx;
+	list.begin->tail.tail_y = snake.buftaily;
+	list = add_begin(list, snake.pos_x, snake.pos_y);
+	list = del_end(list);
+}
+
+list_t add_begin(list_t list, int x, int y)
+{
+	struct element* temp = (struct element*)malloc(sizeof(struct element));
+	temp->tail.tail_y = y;
+	temp->tail.tail_x = x;
+	temp->next = list.begin;
+	temp->prev = NULL;
+
+	if (list.begin) 
+		list.begin->prev = temp;
+	else list.end = temp;
+
+	list.begin = temp;
+	list.counter++;
+
+	return list;
+
+}
+
+list_t add_end(list_t list, int x, int y) 
+{
+	struct element* temp;
+	temp = (struct element*)malloc(sizeof(struct element));
+	temp->tail.tail_x = x;
+	temp->tail.tail_y = y;
+	temp->next = NULL;
+	temp->prev = list.end;
+	if (list.end) 
+		list.end->next = temp;
+	else 
+		list.begin = temp;
+	list.end = temp;
+	list.counter++;
+	return list;
+}
+
+void makenull(list_t* list)
+{
+	list->begin = list->end = NULL;
+	list->counter = 0;
+}
+
+list_t del_end(list_t list)
+{
+	struct element* temp = list.end;
+	if (list.end)
+	{
+		list.end = temp->prev;
+		list.end->next = NULL;
+		free(temp);
+	}
+	if (list.end == NULL){
+		list.begin = NULL;
+	}
+	list.counter--;
+	return list;
+}
+
+void print_list(struct element* begin)
+{
+	if (!begin)
+	{
+		printf("Empty\n");
+		return;
+	}
+	while (begin)
+	{
+		if (begin == list.begin) map[begin->tail.tail_y][begin->tail.tail_x] = 'S';
+		else map[begin->tail.tail_y][begin->tail.tail_x] = 's';
+		begin = begin->next;
+	}
+}
+
+void initFood() {
+
+	food.pos_x = 5;
+	food.pos_y = 5;
+}
+
+void printSnakeAndFood() {
+
+	map[food.pos_y][food.pos_x] = '*';
+
+	if ((snake.pos_x == food.pos_x) && (snake.pos_y == food.pos_y))
+	{
+		food.pos_x = 1 + rand() % 23;
+		food.pos_y = 1 + rand() % 13;
+		list = add_end(list, food.pos_x, food.pos_y);
+	}
+	for (int i = 0; i < list.counter; i++)
+	{
+		print_list(list.begin);
+	}
+	struct element* checker = list.begin->next;
+	while (checker) {
+		if (snake.pos_x == checker->tail.tail_x && snake.pos_y == checker->tail.tail_y) gameOver();
+		else checker = checker->next;
+	}
+}
