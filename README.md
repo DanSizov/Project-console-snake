@@ -20,4 +20,4 @@ All the logic and rules are the same.
 
 What is more, added setcur() function which makes the picture static for the player and the screen doesn't blink. Enjoy!
 
-presetnation https://www.slideshare.net/DaniilSizov/consolesnakedaniilsizovpptx
+presetnation https://www.slideshare.net/DaniilSizov/consolesnakedaniilsizovpptx-254442110
