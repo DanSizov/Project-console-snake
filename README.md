@@ -11,3 +11,6 @@ Every time the snake moves, each and every tail symbol moves to the previous coo
 The snake moves constantly using WASD as movement keys. 
 
 btw if a snake head goes into the wall it continues moving starting from the opposite wall.
+
+----------------------------------------------------------------------------
+A huge refactoring is added in the "snake-refactor" branch. A README file was also added there so you can check the chenges in a new version right now! Enjoy :)
